@@ -2,10 +2,10 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { initializeAuth, getAuth, inMemoryPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  appId: '',
+  apiKey:      process.env.EXPO_PUBLIC_FIREBASE_API_KEY      ?? '',
+  authDomain:  process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN  ?? '',
+  projectId:   process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID   ?? '',
+  appId:       process.env.EXPO_PUBLIC_FIREBASE_APP_ID       ?? '',
 };
 
 // Capturamos ANTES de initializeApp para distinguir primera carga de reinicio

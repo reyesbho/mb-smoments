@@ -38,7 +38,9 @@ logs/
 .env.local
 .env.development
 .env.production
+.env.preview
 .env*.local
+# .env.preview se rastrea como plantilla (sin secretos reales)
 
 # ─── TypeScript ───────────────────────────────────────────────────────────────
 *.tsbuildinfo

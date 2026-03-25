@@ -3,22 +3,33 @@
     "version": ">= 12.0.0"
   },
   "build": {
-    "development": {
+    "dev": {
       "developmentClient": true,
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://192.168.3.19:3000/api",
+        "EXPO_PUBLIC_ENV": "development",
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyCHd3bqn7mmhyfTxPnFeKMFRUxbgvYOpjk",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "sweetmoments-dev.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "sweetmoments-dev",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:663601038967:web:654e3316da1f6370e26872"
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      }
-    },
-    "production": {
-      "android": {
-        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.dulcesmoment.app/api",
+        "EXPO_PUBLIC_ENV": "preview",
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyCHd3bqn7mmhyfTxPnFeKMFRUxbgvYOpjk",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "sweetmoments-dev.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "sweetmoments-dev",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:663601038967:web:654e3316da1f6370e26872"
       }
     }
   }

@@ -8,6 +8,14 @@
     "userInterfaceStyle": "light",
     "plugins": [
       [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.9.25"
+          }
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "Necesitamos acceso a tu galería para subir imágenes de productos."

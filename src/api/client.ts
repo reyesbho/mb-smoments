@@ -2,7 +2,8 @@ import axios from 'axios';
 import { authFirebase } from '../firebase';
 import { loadSession, clearSession } from '../storage/session';
 
-export const BASE_URL = 'http://192.168.3.19:3000/api';
+export const BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ?? 'http://192.168.3.19:3000/api';
 
 const client = axios.create({
   baseURL: BASE_URL,
