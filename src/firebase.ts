@@ -2,10 +2,10 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { initializeAuth, getAuth, inMemoryPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCHd3bqn7mmhyfTxPnFeKMFRUxbgvYOpjk',
-  authDomain: 'sweetmoments-dev.firebaseapp.com',
-  projectId: 'sweetmoments-dev',
-  appId: '1:663601038967:web:654e3316da1f6370e26872',
+  apiKey: '',
+  authDomain: '',
+  projectId: '',
+  appId: '',
 };
 
 // Capturamos ANTES de initializeApp para distinguir primera carga de reinicio
