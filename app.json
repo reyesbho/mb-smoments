@@ -1,11 +1,20 @@
 {
   "expo": {
-    "name": "dulces-momentos",
+    "name": "Dulces Momentos",
     "slug": "dulces-momentos",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Necesitamos acceso a tu galería para subir imágenes de productos."
+        }
+      ],
+      "@react-native-community/datetimepicker"
+    ],
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",

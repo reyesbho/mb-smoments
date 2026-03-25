@@ -1,41 +1,68 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# dependencies
+# ─── Dependencies ─────────────────────────────────────────────────────────────
 node_modules/
 
-# Expo
+# ─── Expo ─────────────────────────────────────────────────────────────────────
 .expo/
 dist/
 web-build/
 expo-env.d.ts
 
-# Native
+# ─── Native (generated) ───────────────────────────────────────────────────────
+/ios
+/android
 .kotlin/
+
+# ─── Signing / certificates ───────────────────────────────────────────────────
 *.orig.*
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
+*.pem
 
-# Metro
+# ─── Metro bundler ────────────────────────────────────────────────────────────
 .metro-health-check*
 
-# debug
+# ─── Logs & debug ─────────────────────────────────────────────────────────────
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+*.log
+logs/
 
-# macOS
-.DS_Store
-*.pem
-
-# local env files
+# ─── Environment / secrets ────────────────────────────────────────────────────
+.env
+.env.local
+.env.development
+.env.production
 .env*.local
 
-# typescript
+# ─── TypeScript ───────────────────────────────────────────────────────────────
 *.tsbuildinfo
 
-# generated native folders
-/ios
-/android
+# ─── OS files ─────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ─── Editors ──────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ─── Testing ──────────────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ─── Build outputs ────────────────────────────────────────────────────────────
+build/
+out/
+
