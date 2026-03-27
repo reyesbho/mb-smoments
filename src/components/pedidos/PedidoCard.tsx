@@ -43,6 +43,7 @@ export default function PedidoCard({ pedido, onPress }: PedidoCardProps) {
         <Text style={styles.label}>{totalItems} {totalItems === 1 ? 'producto' : 'productos'}</Text>
         <View style={styles.footerRight}>
           <Badge type="pago" value={pedido.estatusPago} />
+          <Badge type="tipoPago" value={pedido.tipoPago ?? 'EFECTIVO'} />
           <Text style={styles.total}>${(pedido.total ?? 0).toLocaleString('es-MX')}</Text>
         </View>
       </View>

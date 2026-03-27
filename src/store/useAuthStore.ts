@@ -11,44 +11,47 @@ export type AuthStatus = 'checking' | 'authenticated' | 'unauthenticated';
 export interface AuthState {
   // Propiedades
   status: AuthStatus;
-  user?: AuthResponse;
+  token?:  string;
+  user?:   AuthResponse;
 
   // Métodos
   login:        (email: string, password: string) => Promise<boolean>;
   logout:       () => Promise<void>;
   checkStatus:  () => Promise<void>;
-  changeStatus: (user?: AuthResponse | null) => Promise<boolean>;
+  changeStatus: (token?: string, user?: AuthResponse) => Promise<boolean>;
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
 export const useAuthStore = create<AuthState>()((set, get) => ({
   status: 'checking',
+  token:  undefined,
   user:   undefined,
 
-  changeStatus: async (user?: AuthResponse | null) => {
-    if (!user) {
+  // Única fuente de verdad para persistencia de sesión
+  changeStatus: async (token?: string, user?: AuthResponse) => {
+    if (!token || !user) {
       await clearSession();
-      set({ status: 'unauthenticated', user: undefined });
+      set({ status: 'unauthenticated', token: undefined, user: undefined });
       return false;
     }
 
     await saveSession(user);
-    set({ status: 'authenticated', user });
+    set({ status: 'authenticated', token, user });
     return true;
   },
 
   login: async (email: string, password: string) => {
     const response = await loginAction(email, password);
-    return get().changeStatus(response);
+    return get().changeStatus(response?.accessToken, response ?? undefined);
   },
 
   checkStatus: async () => {
     const response = await checkAuthAction();
-    get().changeStatus(response);
+    get().changeStatus(response?.accessToken, response ?? undefined);
   },
 
   logout: async () => {
-    await logoutAction();
-    set({ status: 'unauthenticated', user: undefined });
+    await Promise.all([logoutAction(), clearSession()]);
+    set({ status: 'unauthenticated', token: undefined, user: undefined });
   },
 }));

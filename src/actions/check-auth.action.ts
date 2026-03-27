@@ -1,8 +1,7 @@
-import { onAuthStateChanged } from 'firebase/auth';
 import { authFirebase } from '../firebase';
 import { authMomentsAction } from '../api/auth';
 import { logoutAction } from './logout.action';
-import { loadSession, saveSession, clearSession } from '../storage/session';
+import { loadSession } from '../storage/session';
 import type { AuthResponse } from '../types';
 
 export const checkAuthAction = (): Promise<AuthResponse | null> => {
@@ -11,14 +10,12 @@ export const checkAuthAction = (): Promise<AuthResponse | null> => {
       // Sin sesión guardada → Login
       if (!stored) return resolve(null);
 
-      // Hay sesión en SecureStore.
       // Firebase usa inMemoryPersistence: no recuerda al usuario entre reinicios.
       // Comprobamos si Firebase ya tiene al usuario en memoria (sesión activa en el mismo proceso).
       const firebaseUser = authFirebase.currentUser;
 
       if (firebaseUser) {
-        // Firebase tiene al usuario (misma sesión, app no fue cerrada completamente)
-        // → Obtenemos token fresco y revalidamos con backend
+        // Firebase tiene al usuario → obtenemos token fresco y revalidamos con backend
         try {
           const freshToken = await firebaseUser.getIdToken();
           const authUser: AuthResponse = {
@@ -33,7 +30,6 @@ export const checkAuthAction = (): Promise<AuthResponse | null> => {
             await logoutAction();
             return resolve(null);
           }
-          await saveSession(authUser);
           return resolve(authUser);
         } catch {
           await logoutAction();

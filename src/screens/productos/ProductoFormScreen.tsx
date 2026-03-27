@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
-  StyleSheet, Alert, ActivityIndicator, Switch, Image,
+  StyleSheet, Alert, ActivityIndicator, Switch, Image, Linking,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -72,13 +72,24 @@ export default function ProductoFormScreen({ route, navigation }: Props) {
   }
 
   async function handlePickImage() {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status, canAskAgain } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permiso denegado', 'Se necesita acceso a la galería para subir imágenes.');
+      if (!canAskAgain) {
+        Alert.alert(
+          'Permiso requerido',
+          'Habilita el acceso a la galería desde la Configuración del dispositivo.',
+          [
+            { text: 'Cancelar', style: 'cancel' },
+            { text: 'Abrir Configuración', onPress: () => Linking.openSettings() },
+          ]
+        );
+      } else {
+        Alert.alert('Permiso denegado', 'Se necesita acceso a la galería para subir imágenes.');
+      }
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       quality: 0.8,
     });
@@ -89,10 +100,12 @@ export default function ProductoFormScreen({ route, navigation }: Props) {
     setIsUploading(true);
     try {
       const url = await uploadImagen(uri);
+      if (!url) throw new Error('URL vacía');
       setImagenUrl(url);
     } catch {
-      Alert.alert('Error', 'No se pudo subir la imagen.');
+      Alert.alert('Error', 'No se pudo subir la imagen. Intenta de nuevo.');
       setImagenUri('');
+      // imagenUrl no se toca: conserva la imagen anterior si existía
     } finally {
       setIsUploading(false);
     }
@@ -121,14 +134,17 @@ export default function ProductoFormScreen({ route, navigation }: Props) {
     const sizes = buildSizes();
     if (sizes.some((s) => s.price <= 0)) return Alert.alert('Validación', 'Todos los tamaños activos deben tener un precio mayor a 0.');
 
-    const payload = {
+    const payload: Record<string, unknown> = {
       name: nombre.trim(),
       descripcion: descripcion.trim(),
-      imagen: imagenUrl,
       estatus,
       category: categoriaId,
       sizes,
     };
+    // Solo incluye imagen si tiene valor: evita sobrescribir con string vacío
+    if (imagenUrl) {
+      payload.imagen = imagenUrl;
+    }
 
     setIsSaving(true);
     try {

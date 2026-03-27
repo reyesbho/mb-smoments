@@ -11,7 +11,7 @@ import { getProductos } from '../../api/productos';
 import colors from '../../theme/colors';
 import type {
   Producto, PedidoProductoItem, PedidoEstatus,
-  PedidoPagoEstatus, ProductoSize,
+  PedidoPagoEstatus, PedidoTipoPago, ProductoSize,
 } from '../../types';
 import type { PedidosStackParamList } from '../../navigation/TabNavigator';
 
@@ -19,12 +19,16 @@ type Props = NativeStackScreenProps<PedidosStackParamList, 'PedidoForm'>;
 
 const ESTATUS_PEDIDO: PedidoEstatus[] = ['BACKLOG', 'TODO', 'DONE', 'CANCELED'];
 const ESTATUS_PAGO: PedidoPagoEstatus[] = ['PENDIENTE', 'ABONADO', 'PAGADO'];
+const TIPO_PAGO: PedidoTipoPago[] = ['EFECTIVO', 'TRANSFERENCIA'];
 
 const ESTATUS_LABEL: Record<PedidoEstatus, string> = {
   BACKLOG: 'Backlog', TODO: 'Por hacer', DONE: 'Entregado', CANCELED: 'Cancelado', DELETE: 'Eliminado',
 };
 const PAGO_LABEL: Record<PedidoPagoEstatus, string> = {
   PENDIENTE: 'Pendiente', ABONADO: 'Abonado', PAGADO: 'Pagado',
+};
+const TIPO_PAGO_LABEL: Record<PedidoTipoPago, string> = {
+  EFECTIVO: 'Efectivo', TRANSFERENCIA: 'Transferencia',
 };
 
 export default function PedidoFormScreen({ route, navigation }: Props) {
@@ -41,6 +45,7 @@ export default function PedidoFormScreen({ route, navigation }: Props) {
   const [detalles, setDetalles] = useState('');
   const [estatus, setEstatus] = useState<PedidoEstatus>('BACKLOG');
   const [estatusPago, setEstatusPago] = useState<PedidoPagoEstatus>('PENDIENTE');
+  const [tipoPago, setTipoPago] = useState<PedidoTipoPago>('EFECTIVO');
   const [items, setItems] = useState<PedidoProductoItem[]>([]);
 
   // Date/time picker
@@ -83,6 +88,7 @@ export default function PedidoFormScreen({ route, navigation }: Props) {
       setDetalles(p.detalles ?? '');
       setEstatus(p.estatus);
       setEstatusPago(p.estatusPago);
+      if (p.tipoPago) setTipoPago(p.tipoPago);
       // Enriquecer cada item con el Producto completo (incluye sizes)
       const enriched = p.productos.map((item) => {
         const full = allProductos.find((pr) => pr.id === item.producto?.id);
@@ -189,6 +195,7 @@ export default function PedidoFormScreen({ route, navigation }: Props) {
       productos: items,
       estatus,
       estatusPago,
+      tipoPago,
       total: calcTotal(items),
     };
 
@@ -274,6 +281,21 @@ export default function PedidoFormScreen({ route, navigation }: Props) {
             >
               <Text style={[styles.chipText, estatusPago === e && styles.chipTextActive]}>
                 {PAGO_LABEL[e]}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <Text style={[styles.sectionTitle, { marginTop: 14 }]}>Tipo de pago</Text>
+        <View style={styles.chipsRow}>
+          {TIPO_PAGO.map((t) => (
+            <TouchableOpacity
+              key={t}
+              style={[styles.chip, tipoPago === t && styles.chipActive]}
+              onPress={() => setTipoPago(t)}
+            >
+              <Text style={[styles.chipText, tipoPago === t && styles.chipTextActive]}>
+                {TIPO_PAGO_LABEL[t]}
               </Text>
             </TouchableOpacity>
           ))}

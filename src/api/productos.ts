@@ -1,5 +1,5 @@
 import client from './client';
-import type { Producto, ProductoFormPayload, ProductosFiltros } from '../types';
+import type { Producto, ProductoFormPayload, ProductosFiltros, FileUploadResponse } from '../types';
 
 export async function getProductos(filtros?: ProductosFiltros): Promise<Producto[]> {
   const { data } = await client.get<Producto[]>('/productos', { params: filtros });
@@ -16,7 +16,7 @@ export async function createProducto(payload: ProductoFormPayload): Promise<Prod
   return data;
 }
 
-export async function updateProducto(id: string, payload: Partial<ProductoFormPayload>): Promise<Producto> {
+export async function updateProducto(id: string, payload: Partial<ProductoFormPayload> | Record<string, unknown>): Promise<Producto> {
   const { data } = await client.patch<Producto>(`/productos/${id}`, payload);
   return data;
 }
@@ -31,10 +31,12 @@ export async function uploadImagen(uri: string): Promise<string> {
   const match = /\.(\w+)$/.exec(filename);
   const type = match ? `image/${match[1]}` : 'image/jpeg';
 
+  // React Native requiere el objeto { uri, name, type } en lugar de File/Blob
   formData.append('file', { uri, name: filename, type } as unknown as Blob);
 
-  const { data } = await client.post<{ url: string }>('/files', formData, {
+  // La respuesta del API es { file: { url: string } }
+  const { data } = await client.post<FileUploadResponse>('/files', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
-  return data.url;
+  return data.file.url;
 }

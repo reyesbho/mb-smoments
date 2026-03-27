@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import colors from '../../theme/colors';
-import type { PedidoEstatus, PedidoPagoEstatus } from '../../types';
+import type { PedidoEstatus, PedidoPagoEstatus, PedidoTipoPago } from '../../types';
 
 // ─── Estatus de pedido ────────────────────────────────────────────────────────
 const ESTATUS_MAP: Record<PedidoEstatus, { label: string; bg: string; text: string; border: string }> = {
@@ -20,6 +20,12 @@ const PAGO_MAP: Record<PedidoPagoEstatus, { label: string; bg: string; text: str
   PAGADO:    { label: 'Pagado',    bg: colors.successBg,  text: colors.successText,  border: colors.successBorder },
 };
 
+// ─── Tipo de pago ─────────────────────────────────────────────────────────────
+const TIPO_PAGO_MAP: Record<PedidoTipoPago, { label: string; bg: string; text: string; border: string }> = {
+  EFECTIVO:     { label: 'Efectivo',     bg: colors.successBg,  text: colors.successText,  border: colors.successBorder },
+  TRANSFERENCIA:{ label: 'Transferencia',bg: colors.neutralBg,  text: colors.neutralText,  border: colors.neutralBorder },
+};
+
 // ─── Estatus activo/inactivo ──────────────────────────────────────────────────
 const ACTIVO_MAP = {
   true:  { label: 'Activo',   bg: colors.successBg, text: colors.successText, border: colors.successBorder },
@@ -27,8 +33,8 @@ const ACTIVO_MAP = {
 };
 
 interface BadgeProps {
-  type: 'estatus' | 'pago' | 'activo';
-  value: PedidoEstatus | PedidoPagoEstatus | boolean;
+  type: 'estatus' | 'pago' | 'tipoPago' | 'activo';
+  value: PedidoEstatus | PedidoPagoEstatus | PedidoTipoPago | boolean;
 }
 
 export default function Badge({ type, value }: BadgeProps) {
@@ -38,14 +44,21 @@ export default function Badge({ type, value }: BadgeProps) {
     config = ESTATUS_MAP[value as PedidoEstatus];
   } else if (type === 'pago') {
     config = PAGO_MAP[value as PedidoPagoEstatus];
+  } else if (type === 'tipoPago') {
+    config = TIPO_PAGO_MAP[value as PedidoTipoPago];
   } else {
     config = ACTIVO_MAP[String(value) as 'true' | 'false'];
   }
 
+  const icon =
+    type === 'pago'     ? 'cash-outline' :
+    type === 'tipoPago' ? 'wallet-outline' :
+    null;
+
   return (
     <View style={[styles.badge, { backgroundColor: config.bg, borderColor: config.border }]}>
-      {type === 'pago' && (
-        <Ionicons name="cash-outline" size={11} color={config.text} style={styles.icon} />
+      {icon && (
+        <Ionicons name={icon} size={11} color={config.text} style={styles.icon} />
       )}
       <Text style={[styles.text, { color: config.text }]}>{config.label}</Text>
     </View>

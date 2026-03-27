@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View, Text, ScrollView, Image, TouchableOpacity,
   StyleSheet, ActivityIndicator, Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { getProducto, updateProducto, deleteProducto } from '../../api/productos';
 import Badge from '../../components/ui/Badge';
@@ -19,7 +20,12 @@ export default function ProductoDetailScreen({ route, navigation }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => { loadProducto(); }, [id]);
+  // Recarga siempre que la pantalla gana el foco (incluso al volver del formulario de edición)
+  useFocusEffect(
+    useCallback(() => {
+      loadProducto();
+    }, [id])
+  );
 
   async function loadProducto() {
     setIsLoading(true);

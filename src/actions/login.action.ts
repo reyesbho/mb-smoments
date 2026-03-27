@@ -2,7 +2,6 @@ import { signInWithEmailAndPassword, type UserCredential } from 'firebase/auth';
 import { authFirebase } from '../firebase';
 import { authMomentsAction } from '../api/auth';
 import { logoutAction } from './logout.action';
-import { saveSession } from '../storage/session';
 import type { AuthResponse } from '../types';
 
 export const loginAction = async (email: string, password: string): Promise<AuthResponse | null> => {
@@ -31,9 +30,6 @@ export const loginAction = async (email: string, password: string): Promise<Auth
       await logoutAction();
       throw new Error('Error al autenticarse');
     }
-
-    // Persiste la sesión en SecureStore
-    await saveSession(authCredentials);
 
     return authCredentials;
   } catch (error) {

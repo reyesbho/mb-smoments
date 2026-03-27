@@ -68,3 +68,4 @@ coverage/
 build/
 out/
 
+eas.json

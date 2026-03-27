@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, ActivityIndicator, KeyboardAvoidingView,
-  Platform, ScrollView, Alert,
+  Platform, ScrollView, Alert, Image,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../store/useAuthStore';
 import colors from '../../theme/colors';
+
+const logo = require('../../../assets/logo.png');
 
 export default function LoginScreen() {
   const login = useAuthStore((state) => state.login);
@@ -37,10 +38,11 @@ export default function LoginScreen() {
     >
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <View style={styles.logoContainer}>
-          <View style={styles.logoIconWrap}>
-            <Ionicons name="gift-outline" size={52} color={colors.primary} />
-          </View>
-          <Text style={styles.logoTitle}>Dulces Momentos</Text>
+          <Image
+            source={logo}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
           <Text style={styles.logoSubtitle}>Panel de administración</Text>
         </View>
 
@@ -95,17 +97,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  logoIconWrap: { marginBottom: 12 },
-  logoTitle: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: colors.primary,
-    letterSpacing: 0.5,
+  logoImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 8,
   },
   logoSubtitle: {
     fontSize: 14,
     color: colors.textSecondary,
     marginTop: 4,
+    letterSpacing: 0.5,
   },
   card: {
     backgroundColor: colors.surface,

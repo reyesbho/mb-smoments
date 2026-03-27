@@ -1,3 +1,11 @@
+// ─── File upload ──────────────────────────────────────────────────────────────
+export interface FileUploadResponse {
+  file: {
+    url: string;
+    key?: string;
+  };
+}
+
 // ─── Timestamps Firebase ──────────────────────────────────────────────────────
 export interface FirebaseTimestamp {
   seconds: number;
@@ -51,6 +59,12 @@ export interface Producto {
 // ─── Pedido ───────────────────────────────────────────────────────────────────
 export type PedidoEstatus = 'BACKLOG' | 'TODO' | 'DONE' | 'CANCELED' | 'DELETE';
 export type PedidoPagoEstatus = 'PENDIENTE' | 'PAGADO' | 'ABONADO';
+export type PedidoTipoPago = 'EFECTIVO' | 'TRANSFERENCIA';
+
+export interface Abono {
+  monto: number;
+  fecha: FirebaseTimestamp;
+}
 
 export interface PedidoProductoItem {
   id: string;
@@ -70,9 +84,10 @@ export interface Pedido {
   productos: PedidoProductoItem[];
   estatus: PedidoEstatus;
   estatusPago: PedidoPagoEstatus;
+  tipoPago: PedidoTipoPago;
   total: number;
   detalles?: string;
-  abonado?: number;
+  abonos?: Abono[];
   fechaCreacion: FirebaseTimestamp;
   fechaActualizacion?: FirebaseTimestamp;
   registradoPor: string;
@@ -96,6 +111,7 @@ export interface PedidoFormPayload {
   productos: PedidoProductoItem[];
   estatus: PedidoEstatus;
   estatusPago: PedidoPagoEstatus;
+  tipoPago: PedidoTipoPago;
   total: number;
   detalles?: string;
 }
